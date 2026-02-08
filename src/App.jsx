@@ -20,13 +20,15 @@ function App() {
   // }
 
   return (
-    <>
+    <div className="min-h-screen flex flex-col">
       <Navbar />
-      <main>
+
+      {/* Main content */}
+      <main className="flex-1 flex flex-col gap-4 pt-15">
         <HeroSection />
         <Cetagory />
       </main>
-    </>
+    </div>
   );
 }
 

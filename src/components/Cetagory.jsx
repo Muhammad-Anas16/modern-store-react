@@ -1,69 +1,73 @@
+import React from "react";
+import { MonitorSmartphone, Gem, Shirt, User } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import { getAllProducts } from "./../tenStack/fakeStoreApi";
+import { getAllProducts } from "../tenStack/fakeStoreApi";
 
-const Cetagory = () => {
-  const { data } = useQuery({
+// Static category data with icon
+const categories = [
+  { value: "electronics", icon: MonitorSmartphone },
+  { value: "jewelery", icon: Gem },
+  { value: "men's clothing", icon: Shirt },
+  { value: "women's clothing", icon: User },
+];
+
+const Category = () => {
+  const { data, isLoading, isError } = useQuery({
     queryKey: ["products"],
     queryFn: getAllProducts,
   });
-  if (!data) {
-    console.log("Data Not Found!");
+
+  if (isLoading) {
+    return (
+      <section className="flex justify-center items-center py-10">
+        <p className="text-gray-500">Loading categories...</p>
+      </section>
+    );
   }
 
-  const allCategories = data?.map((item) => item.category);
+  if (isError) {
+    return (
+      <section className="flex justify-center items-center py-10">
+        <p className="text-red-500">Failed to load categories!</p>
+      </section>
+    );
+  }
 
-  console.log("allCategories => ", allCategories);
+  // Extract unique categories from API data
+  const allCategories = data
+    ?.map((item) => item.category)
+    ?.filter((item, index, array) => array.indexOf(item) === index);
+
+  console.log("All Categories from API:", allCategories);
 
   return (
-    <section className="flex flex-col gap-4">
-      <div className="flex items-center justify-between px-4">
-        <h3 className="text-lg font-bold tracking-tight">Browse Categories</h3>
-        <button className="text-primary text-xs font-semibold">View All</button>
-      </div>
-      <div className="flex gap-3 px-4 overflow-x-auto no-scrollbar">
-        <div className="flex flex-col items-center gap-2 group shrink-0">
-          <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary group-active:scale-90 transition-transform">
-            <span className="material-symbols-outlined">devices</span>
-          </div>
-          <span className="text-[10px] font-bold uppercase tracking-widest opacity-70">
-            Electronics
-          </span>
-        </div>
-        <div className="flex flex-col items-center gap-2 group shrink-0">
-          <div className="w-16 h-16 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400">
-            <span className="material-symbols-outlined">diamond</span>
-          </div>
-          <span className="text-[10px] font-bold uppercase tracking-widest opacity-70">
-            Jewelry
-          </span>
-        </div>
-        <div className="flex flex-col items-center gap-2 group shrink-0">
-          <div className="w-16 h-16 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400">
-            <span className="material-symbols-outlined">man</span>
-          </div>
-          <span className="text-[10px] font-bold uppercase tracking-widest opacity-70">
-            Men's
-          </span>
-        </div>
-        <div className="flex flex-col items-center gap-2 group shrink-0">
-          <div className="w-16 h-16 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400">
-            <span className="material-symbols-outlined">woman</span>
-          </div>
-          <span className="text-[10px] font-bold uppercase tracking-widest opacity-70">
-            Women's
-          </span>
-        </div>
-        <div className="flex flex-col items-center gap-2 group shrink-0">
-          <div className="w-16 h-16 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400">
-            <span className="material-symbols-outlined">watch</span>
-          </div>
-          <span className="text-[10px] font-bold uppercase tracking-widest opacity-70">
-            Accessories
-          </span>
-        </div>
+    <section className="flex flex-col gap-6 px-4 py-6">
+      {/* Header */}
+      <h3 className="text-xl md:text-2xl font-bold tracking-tight text-gray-800">
+        Browse Categories
+      </h3>
+
+      {/* Categories Grid */}
+      <div className="flex gap-4 overflow-x-auto no-scrollbar py-2">
+        {categories.map((cat) => {
+          const Icon = cat.icon;
+          return (
+            <div
+              key={cat.value}
+              className="flex flex-col items-center gap-2 min-w-[80px] sm:min-w-[100px] group cursor-pointer transition-transform hover:scale-105"
+            >
+              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-primary/10 flex items-center justify-center text-primary shadow-md">
+                <Icon size={24} />
+              </div>
+              <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-center text-gray-700 opacity-80">
+                {cat.value}
+              </span>
+            </div>
+          );
+        })}
       </div>
     </section>
   );
 };
 
-export default Cetagory;
+export default Category;
