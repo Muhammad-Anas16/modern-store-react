@@ -1,8 +1,10 @@
 import { useState } from "react";
-import { FaHeart, FaRegHeart, FaCartArrowDown } from "react-icons/fa";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { IoStar } from "react-icons/io5";
+import { BsCartX, BsCartPlus } from "react-icons/bs";
+import { Link } from "react-router";
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ product, to }) => {
   const { id, title, image, price, rating } = product;
 
   /* ---------- Helpers ---------- */
@@ -21,7 +23,8 @@ const ProductCard = ({ product }) => {
   );
 
   /* ---------- Favorite ---------- */
-  const toggleFavorite = () => {
+  const toggleFavorite = (e) => {
+    e.stopPropagation();
     let favorites = getStorage("favorites");
 
     if (isFavorite) {
@@ -35,7 +38,8 @@ const ProductCard = ({ product }) => {
   };
 
   /* ---------- Cart ---------- */
-  const toggleCart = () => {
+  const toggleCart = (e) => {
+    e.stopPropagation();
     let cart = getStorage("cart");
 
     if (inCart) {
@@ -49,7 +53,9 @@ const ProductCard = ({ product }) => {
   };
 
   return (
-    <div className="w-full rounded-2xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition">
+    <Link to={to}
+      className="w-full rounded-2xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition"
+    >
       {/* Image */}
       <div className="relative aspect-square overflow-hidden rounded-t-2xl bg-gray-50 p-4">
         <img
@@ -74,7 +80,7 @@ const ProductCard = ({ product }) => {
       {/* Content */}
       <div className="p-4 flex flex-col gap-2">
         {/* Rating */}
-        <div className="flex items-center gap-1 text-sm font-semibold text-yellow-500">
+        <div className="flex items-center gap-1 text-lg font-semibold text-yellow-500">
           <IoStar />
           <span>{rating?.rate || 4.5}</span>
         </div>
@@ -90,15 +96,14 @@ const ProductCard = ({ product }) => {
 
           <button
             onClick={toggleCart}
-            className={`flex items-center gap-2 rounded-lg px-3 py-2 text-xs sm:text-sm font-semibold text-white transition
-            ${inCart ? "bg-green-600" : "bg-[#135BEC] hover:bg-[#0f4bcc]"}`}
+            className={`flex items-center gap-2 rounded-lg px-3 py-2 text-xl font-bold transition
+            ${inCart ? "text-green-600" : "text-[#135BEC]"}`}
           >
-            <FaCartArrowDown />
-            {inCart ? "Added" : "Add"}
+            {inCart ? <BsCartX /> : <BsCartPlus />}
           </button>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 

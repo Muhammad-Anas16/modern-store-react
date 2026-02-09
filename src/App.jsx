@@ -1,36 +1,23 @@
-// import { useQuery } from "@tanstack/react-query";
+import { BrowserRouter, Route, Routes } from "react-router";
 import "./App.css";
-import Cetagory from "./components/Cetagory";
-import HeroSection from "./components/HeroSection";
 import Navbar from "./components/main/Navbar";
-import ProductSection from "./components/ProductSection";
-// import { getAllProducts } from './tenStack/fakeStoreApi';
+import HomePage from "../Pages/Home";
+import ProductsPage from "../Pages/products";
+import DetailsPage from "../Pages/DetailsPAge";
 
 function App() {
-  // const { data, isLoading, error } = useQuery({
-  //   queryKey: ["products"],
-  //   queryFn: getAllProducts,
-  // });
-
-  // if (isLoading) {
-  //   console.log("Fetching the products");
-  // }
-  // console.log("Categories:", data);
-  // if (error) {
-  //   console.error("Error fetching categories", error);
-  // }
-
   return (
-    <div className="min-h-screen flex flex-col">
-      <Navbar />
+    <BrowserRouter>
+      <div className="min-h-screen flex flex-col">
+        <Navbar />
 
-      {/* Main content */}
-      <main className="flex-1 flex flex-col gap-4 pt-15">
-        <HeroSection />
-        <Cetagory />
-        <ProductSection />
-      </main>
-    </div>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/products" element={<ProductsPage />} />
+          <Route path="/products/:id" element={<DetailsPage />} />
+        </Routes>
+      </div>
+    </BrowserRouter>
   );
 }
 

@@ -11,7 +11,7 @@ const categories = [
   { value: "women's clothing", icon: User },
 ];
 
-const Category = () => {
+const CategorySection = () => {
   const { data, isLoading, isError } = useQuery({
     queryKey: ["products"],
     queryFn: getAllProducts,
@@ -70,4 +70,4 @@ const Category = () => {
   );
 };
 
-export default Category;
+export default CategorySection;
