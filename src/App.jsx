@@ -3,6 +3,7 @@ import "./App.css";
 import Cetagory from "./components/Cetagory";
 import HeroSection from "./components/HeroSection";
 import Navbar from "./components/main/Navbar";
+import ProductSection from "./components/ProductSection";
 // import { getAllProducts } from './tenStack/fakeStoreApi';
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
       <main className="flex-1 flex flex-col gap-4 pt-15">
         <HeroSection />
         <Cetagory />
+        <ProductSection />
       </main>
     </div>
   );
