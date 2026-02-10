@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { FiMenu, FiX, FiSearch, FiShoppingBag } from "react-icons/fi";
+import { Link } from "react-router";
 
 const Navbar = () => {
   const menuData = ["Home", "About", "Services", "Contact"];
@@ -25,9 +26,12 @@ const Navbar = () => {
             </button>
 
             {/* Logo */}
-            <h1 className="text-sm font-bold uppercase tracking-wide text-[#135BEC]">
+            <Link
+              to={"/"}
+              className="text-sm font-bold uppercase tracking-wide text-[#135BEC]"
+            >
               ModernStore
-            </h1>
+            </Link>
           </div>
 
           {/* DESKTOP MENU */}

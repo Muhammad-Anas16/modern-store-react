@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router";
 
 const HeroSection = () => {
   return (
@@ -20,9 +21,12 @@ const HeroSection = () => {
             modern lifestyle.
           </p>
           <div className="pt-2">
-            <button className="bg-[#135BEC] text-white px-8 py-3 rounded-lg font-bold text-sm tracking-wide shadow-lg shadow-primary/25 active:scale-95 transition-transform cursor-pointer">
+            <Link
+              to={"/products"}
+              className="bg-[#135BEC] text-white px-8 py-3 rounded-lg font-bold text-sm tracking-wide shadow-lg shadow-primary/25 active:scale-95 transition-transform cursor-pointer"
+            >
               Shop Now
-            </button>
+            </Link>
           </div>
         </div>
       </div>
