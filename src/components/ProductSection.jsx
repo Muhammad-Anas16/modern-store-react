@@ -2,7 +2,7 @@ import ProductCard from "./ProductCard";
 import { useQuery } from "@tanstack/react-query";
 import { getAllProducts } from "../tenStack/fakeStoreApi";
 
-const ProductSection = ({ func }) => {
+const AllProductSection = ({ func }) => {
   const { data: products = [], isLoading } = useQuery({
     queryKey: ["products"],
     queryFn: getAllProducts,
@@ -40,4 +40,4 @@ const ProductSection = ({ func }) => {
   );
 };
 
-export default ProductSection;
+export default AllProductSection;

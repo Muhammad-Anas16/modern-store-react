@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import { getAllProducts } from "../src/tenStack/fakeStoreApi";
-import ProductCard from "../src/components/ProductCard";
-import CategorySection from "../src/components/Cetagory";
+import { getAllProducts } from "../tenStack/fakeStoreApi";
 import { useState } from "react";
+import CategorySection from "../components/Cetagory";
+import ProductCard from "../components/ProductCard";
 
 const ProductsPage = () => {
   const [func, setFunc] = useState("All");
