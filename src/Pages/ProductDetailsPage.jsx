@@ -1,23 +1,31 @@
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "react-router";
-import { getProductById } from "../tenStack/fakeStoreApi";
+import { useParams, useNavigate } from "react-router";
+import { getProductById, getAllProducts } from "../tenStack/fakeStoreApi";
 import { IoStar } from "react-icons/io5";
+import { FaArrowLeft, FaHeart } from "react-icons/fa";
 
 const ProductDetailsPage = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
 
+  // Main product
   const { data, isLoading } = useQuery({
-    queryKey: ["products", id],
+    queryKey: ["product", id],
     queryFn: () => getProductById(id),
     enabled: !!id,
   });
 
-  if (isLoading) {
+  // Recommended products
+  const { data: products } = useQuery({
+    queryKey: ["products"],
+    queryFn: getAllProducts,
+  });
+
+  if (isLoading || !data) {
     return (
-      <section className="px-4 py-6">
-        <h2 className="text-xl font-bold mb-6">Products</h2>
-        <p>Loading...</p>
-      </section>
+      <div className="p-6 text-center">
+        <p className="text-lg font-semibold">Loading...</p>
+      </div>
     );
   }
 
@@ -25,41 +33,106 @@ const ProductDetailsPage = () => {
   const { count, rate } = rating;
 
   return (
-    <section className="text-gray-600 body-font">
-      <div className="mx-auto flex px-5 py-24 md:flex-row flex-col items-center">
-        <div className="lg:max-w-lg lg:w-full md:w-1/2 w-5/6 mb-10 md:mb-0">
+    <div className="bg-gray-50 min-h-screen pb-28">
+      {/* Header */}
+      <div className="flex items-center justify-between px-4 py-4 bg-white shadow-sm">
+        <button onClick={() => navigate(-1)}>
+          <FaArrowLeft className="text-xl" />
+        </button>
+        <h2 className="font-semibold text-lg">Product Details</h2>
+        <div className="w-6" />
+      </div>
+
+      {/* Image Section */}
+      <div className="p-4">
+        <div className="bg-white rounded-2xl p-6 relative">
           <img
-            className="object-cover object-center rounded"
-            alt={title || "product title"}
-            src={image || "https://dummyimage.com/720x600"}
+            src={image}
+            alt={title}
+            className="mx-auto h-72 object-contain"
           />
+          <button className="absolute top-4 right-4 bg-gray-100 p-3 rounded-full shadow">
+            <FaHeart className="text-gray-400" />
+          </button>
         </div>
-        <div className="lg:flex-grow md:w-1/2 lg:pl-24 md:pl-16 flex flex-col md:items-start md:text-left items-center text-center">
-          <h6 className="font-bold text-[#135BEC] capitalize">
-            {category || "Product Category"}
-          </h6>
-          <h1 className="font-bold sm:text-4xl text-3xl mb-4 text-black">
-            {title || "product title"}
-          </h1>
 
-          <div className="flex items-center justify-around gap-6 font-bold">
-            <h1 className="text-4xl text-blue-600">${price || "price"}</h1>
-            <h1 className="flex items-center justify-center text-yellow-600 text-xl">
-              <IoStar /> {`${rate} (${count} reviews)`}
-            </h1>
-          </div>
-
-          <p className="mb-8 leading-relaxed">
-            {description || "product description..."}
-          </p>
-          <div className="">
-            <button className="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg">
-              Button
-            </button>
-          </div>
+        {/* Dots */}
+        <div className="flex justify-center gap-2 mt-4">
+          <span className="w-2 h-2 bg-blue-600 rounded-full" />
+          <span className="w-2 h-2 bg-gray-300 rounded-full" />
+          <span className="w-2 h-2 bg-gray-300 rounded-full" />
         </div>
       </div>
-    </section>
+
+      {/* Details */}
+      <div className="px-4">
+        <p className="text-blue-600 tracking-widest text-sm font-semibold uppercase">
+          {category}
+        </p>
+
+        <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mt-2">
+          {title}
+        </h1>
+
+        {/* Price & Rating */}
+        <div className="flex items-center justify-between mt-4 flex-wrap gap-3">
+          <div className="flex items-center gap-3">
+            <span className="text-3xl font-bold text-blue-600">${price}</span>
+            <span className="line-through text-gray-400">
+              ${(price + 50).toFixed(2)}
+            </span>
+          </div>
+
+          <div className="flex items-center gap-1 bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm font-medium">
+            <IoStar />
+            {rate} ({count} reviews)
+          </div>
+        </div>
+
+        {/* Description */}
+        <div className="mt-8">
+          <h3 className="font-semibold text-lg text-gray-900 mb-3">
+            Description
+          </h3>
+          <p className="text-gray-600 leading-relaxed text-sm md:text-base">
+            {description}
+          </p>
+        </div>
+      </div>
+
+      {/* Recommended */}
+      <div className="mt-10 px-4">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-lg font-bold">You Might Also Like</h3>
+        </div>
+
+        <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+          {products?.slice(0, 4).map((item) => (
+            <div
+              key={item.id}
+              className="min-w-[160px] bg-white p-4 rounded-xl shadow-sm"
+            >
+              <img
+                src={item.image}
+                alt={item.title}
+                className="h-28 mx-auto object-contain"
+              />
+              <h4 className="text-sm mt-3 font-medium truncate">
+                {item.title}
+              </h4>
+              <p className="text-blue-600 font-bold mt-1">${item.price}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Sticky Bottom Bar */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white shadow-lg p-4 flex items-center gap-4">
+        <button className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl text-lg font-semibold transition">
+          Add to Cart
+        </button>
+      </div>
+    </div>
   );
 };
 

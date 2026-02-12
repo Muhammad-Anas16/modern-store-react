@@ -4,6 +4,8 @@ import Navbar from "./components/main/Navbar";
 import HomePage from "./Pages/HomePage";
 import ProductsPage from "./Pages/ProductsPage";
 import ProductDetailsPage from "./Pages/ProductDetailsPage";
+import Cart_Page from "./Pages/Cart_Page";
+import Checkout_Page from "./Pages/Checkout_Page";
 
 function App() {
   return (
@@ -15,6 +17,8 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/products" element={<ProductsPage />} />
           <Route path="/products/:id" element={<ProductDetailsPage />} />
+          <Route path="/cart/:id" element={<Cart_Page />} />
+          <Route path="/checkout/:id" element={<Checkout_Page />} />
         </Routes>
       </div>
     </BrowserRouter>
