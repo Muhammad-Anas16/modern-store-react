@@ -1,31 +1,34 @@
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { FiMenu, FiX, FiSearch, FiShoppingBag } from "react-icons/fi";
+import { LuHeart } from "react-icons/lu";
 import { Link } from "react-router";
+import { getAllProducts } from "../../tenStack/fakeStoreApi";
 
 const Navbar = () => {
-  const menuData = ["Home", "About", "Services", "Contact"];
-  const [menuOpen, setMenuOpen] = useState(false);
+  const { data, isLoading } = useQuery({
+    queryKey: ["products"],
+    queryFn: getAllProducts,
+  });
+
   const [searchOpen, setSearchOpen] = useState(false);
+
+  // Get Cart data from localStorage and filter it with the data from API to get only products in the cart
+  const getId = localStorage.getItem("cart"); // Get cart data from localStorage
+  const parseID = getId ? JSON.parse(getId) : []; // Parse cart data in JSON format
+  const cartData = data?.filter((item) => parseID.includes(item.id)); // Filter for get only cart in localStorage
+
+// Get Favorites data from localStorage and filter it with the data from API to get only products in the favorites
+  const getFav = localStorage.getItem("favorites"); // Get favorites data from localStorage
+  const parseFav = getFav ? JSON.parse(getFav) : []; // Parse favorites data in JSON format
+  const favData = data?.filter((item) => parseFav.includes(item.id)); // Filter for get only favorites in localStorage
+
 
   return (
     <>
-      {/* NAVBAR */}
       <nav className="fixed top-0 z-50 w-full bg-white border-b border-black/10 px-3">
         <div className="mx-auto flex h-14 max-w-screen items-center justify-between">
-          {/* LEFT SIDE */}
           <div className="flex items-center gap-3">
-            {/* Hamburger (mobile only) */}
-            <button
-              onClick={() => {
-                setMenuOpen(!menuOpen);
-                setSearchOpen(false);
-              }}
-              className="flex h-9 w-9 items-center justify-center rounded-md hover:bg-black/5 md:hidden"
-            >
-              {menuOpen ? <FiX size={20} /> : <FiMenu size={20} />}
-            </button>
-
-            {/* Logo */}
             <Link
               to={"/"}
               className="text-sm font-bold uppercase tracking-wide text-[#135BEC]"
@@ -34,24 +37,11 @@ const Navbar = () => {
             </Link>
           </div>
 
-          {/* DESKTOP MENU */}
-          <ul className="hidden md:flex items-center gap-6 text-sm font-semibold">
-            {menuData.map((item) => (
-              <li key={item}>
-                <a href="#" className="hover:text-[#135BEC] transition">
-                  {item}
-                </a>
-              </li>
-            ))}
-          </ul>
-
-          {/* RIGHT ICONS */}
           <div className="flex items-center gap-4">
             {/* Search */}
             <button
               onClick={() => {
                 setSearchOpen(true);
-                setMenuOpen(false);
               }}
               className="hover:text-[#135BEC] transition"
             >
@@ -59,17 +49,29 @@ const Navbar = () => {
             </button>
 
             {/* Cart */}
-            <button className="relative hover:text-[#135BEC] transition">
+            <Link
+              to="/cart"
+              className="relative hover:text-[#135BEC] transition"
+            >
               <FiShoppingBag size={18} />
               <span className="absolute -top-2 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-[#135BEC] text-[10px] font-bold text-white">
-                3
+                {isLoading ? 0 : cartData?.length || 0}
               </span>
-            </button>
+            </Link>
+
+            <Link
+              to="/favorites"
+              className="relative hover:text-[#135BEC] transition"
+            >
+              <LuHeart size={18} />
+              <span className="absolute -top-2 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-[#135BEC] text-[10px] font-bold text-white">
+                {isLoading ? 0 : favData?.length || 0}
+              </span>
+            </Link>
           </div>
         </div>
       </nav>
 
-      {/* FIXED SEARCH BAR */}
       {searchOpen && (
         <div className="fixed top-14 z-40 w-full border-b border-black/10 bg-white">
           <div className="mx-auto flex max-w-screen items-center gap-3 px-4 py-3">
@@ -80,7 +82,6 @@ const Navbar = () => {
               className="w-full rounded-md border border-black/20 px-4 py-2 text-sm outline-none focus:border-[#135BEC]"
             />
 
-            {/* Close Search */}
             <button
               onClick={() => setSearchOpen(false)}
               className="flex h-9 w-9 items-center justify-center rounded-md hover:bg-black/5"
@@ -88,25 +89,6 @@ const Navbar = () => {
               <FiX size={18} />
             </button>
           </div>
-        </div>
-      )}
-
-      {/* MOBILE MENU */}
-      {menuOpen && (
-        <div className="fixed top-14 z-40 w-full border-t border-black/10 bg-white md:hidden">
-          <ul className="flex flex-col gap-2 p-4 text-sm font-semibold">
-            {menuData.map((item) => (
-              <li key={item}>
-                <a
-                  href="#"
-                  onClick={() => setMenuOpen(false)}
-                  className="block rounded-md px-3 py-2 hover:bg-black/5"
-                >
-                  {item}
-                </a>
-              </li>
-            ))}
-          </ul>
         </div>
       )}
     </>
