@@ -3,25 +3,30 @@ import { useParams, useNavigate } from "react-router";
 import { getProductById, getAllProducts } from "../tenStack/fakeStoreApi";
 import { IoStar } from "react-icons/io5";
 import { FaArrowLeft, FaHeart } from "react-icons/fa";
+import { useState } from "react";
+import OrderSuccessModal from "../components/checkout/OrderSuccessModal";
 
 const ProductDetailsPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  // Main product
-  const { data, isLoading } = useQuery({
+  const [showModal, setShowModal] = useState(false);
+
+  /* ---------------- Main Product ---------------- */
+  const { data, isLoading, isError } = useQuery({
     queryKey: ["product", id],
     queryFn: () => getProductById(id),
     enabled: !!id,
   });
 
-  // Recommended products
+  /* ---------------- Recommended Products ---------------- */
   const { data: products } = useQuery({
     queryKey: ["products"],
     queryFn: getAllProducts,
   });
 
-  if (isLoading || !data) {
+  /* ---------------- Loading & Error ---------------- */
+  if (isLoading) {
     return (
       <div className="p-6 text-center">
         <p className="text-lg font-semibold">Loading...</p>
@@ -29,8 +34,27 @@ const ProductDetailsPage = () => {
     );
   }
 
+  if (isError || !data) {
+    return (
+      <div className="p-6 text-center text-red-500">
+        <p className="text-lg font-semibold">Product not found</p>
+      </div>
+    );
+  }
+
   const { category, description, image, price, title, rating } = data;
   const { count, rate } = rating;
+
+  /* ---------------- Handle Add To Cart ---------------- */
+  const handleAddToCart = () => {
+    setShowModal(true);
+    console.log("Added to cart:", {
+      id,
+      title,
+      price,
+      image,
+    });
+  };
 
   return (
     <div className="bg-gray-50 min-h-screen pb-28">
@@ -77,7 +101,9 @@ const ProductDetailsPage = () => {
         {/* Price & Rating */}
         <div className="flex items-center justify-between mt-4 flex-wrap gap-3">
           <div className="flex items-center gap-3">
-            <span className="text-3xl font-bold text-blue-600">${price}</span>
+            <span className="text-3xl font-bold text-blue-600">
+              ${price.toFixed(2)}
+            </span>
             <span className="line-through text-gray-400">
               ${(price + 50).toFixed(2)}
             </span>
@@ -107,31 +133,43 @@ const ProductDetailsPage = () => {
         </div>
 
         <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
-          {products?.slice(0, 4).map((item) => (
-            <div
-              key={item.id}
-              className="min-w-[160px] bg-white p-4 rounded-xl shadow-sm"
-            >
-              <img
-                src={item.image}
-                alt={item.title}
-                className="h-28 mx-auto object-contain"
-              />
-              <h4 className="text-sm mt-3 font-medium truncate">
-                {item.title}
-              </h4>
-              <p className="text-blue-600 font-bold mt-1">${item.price}</p>
-            </div>
-          ))}
+          {products
+            ?.filter((item) => item.id !== data.id)
+            .slice(0, 4)
+            .map((item) => (
+              <div
+                key={item.id}
+                onClick={() => navigate(`/product/${item.id}`)}
+                className="min-w-[160px] bg-white p-4 rounded-xl shadow-sm cursor-pointer hover:shadow-md transition"
+              >
+                <img
+                  src={item.image}
+                  alt={item.title}
+                  className="h-28 mx-auto object-contain"
+                />
+                <h4 className="text-sm mt-3 font-medium truncate">
+                  {item.title}
+                </h4>
+                <p className="text-blue-600 font-bold mt-1">
+                  ${item.price.toFixed(2)}
+                </p>
+              </div>
+            ))}
         </div>
       </div>
 
       {/* Sticky Bottom Bar */}
       <div className="fixed bottom-0 left-0 right-0 bg-white shadow-lg p-4 flex items-center gap-4">
-        <button className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl text-lg font-semibold transition">
+        <button
+          onClick={handleAddToCart}
+          className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl text-lg font-semibold transition"
+        >
           Add to Cart
         </button>
       </div>
+
+      {/* Success Modal */}
+      <OrderSuccessModal isOpen={showModal} />
     </div>
   );
 };

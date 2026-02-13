@@ -1,14 +1,29 @@
 import { useState } from "react";
 import { FaArrowLeft } from "react-icons/fa";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import ShippingForm from "../components/checkout/ShippingForm";
 import PaymentSection from "../components/checkout/PaymentSection";
 import OrderSummary from "../components/checkout/OrderSummary";
+import { useQuery } from "@tanstack/react-query";
+import { getProductById } from "../tenStack/fakeStoreApi";
 
 const Checkout_Page = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
 
   const [paymentMethod, setPaymentMethod] = useState("apple");
+
+  /* ---------------- Main Product ---------------- */
+  const { data } = useQuery({
+    queryKey: ["product", id],
+    queryFn: () => getProductById(id),
+    enabled: !!id,
+  });
+
+  console.log("Checkout product data:", data); // Debug log
+
+  // const { category, description, image, price, title, rating } = data;
+  // const { count, rate } = rating;
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -56,7 +71,10 @@ const Checkout_Page = () => {
 
       {/* Sticky Button */}
       <div className="fixed bottom-0 left-0 right-0 bg-white p-6 shadow-lg">
-        <button className="w-full bg-blue-600 hover:bg-blue-700 transition text-white py-4 rounded-2xl text-lg font-semibold shadow-md">
+        <button
+          onClick={() => alert("order placed")}
+          className="w-full bg-blue-600 hover:bg-blue-700 transition text-white py-4 rounded-2xl text-lg font-semibold shadow-md"
+        >
           Place Order →
         </button>
       </div>
