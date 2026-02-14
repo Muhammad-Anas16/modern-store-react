@@ -73,23 +73,6 @@ const Navbar = () => {
       </nav>
 
       {searchOpen && (
-        // <div className="fixed top-14 z-40 w-full border-b border-black/10 bg-white">
-        //   <div className="mx-auto flex max-w-screen items-center gap-3 px-4 py-3">
-        //     <input
-        //       type="text"
-        //       placeholder="Search products..."
-        //       autoFocus
-        //       className="w-full rounded-md border border-black/20 px-4 py-2 text-sm outline-none focus:border-[#135BEC]"
-        //     />
-
-        //     <button
-        //       onClick={() => setSearchOpen(false)}
-        //       className="flex h-9 w-9 items-center justify-center rounded-md hover:bg-black/5"
-        //     >
-        //       <FiX size={18} />
-        //     </button>
-        //   </div>
-        // </div>
         <SearchBar setSearchOpen={setSearchOpen} />
       )}
     </>

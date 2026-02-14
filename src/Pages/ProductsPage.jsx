@@ -3,6 +3,7 @@ import { getAllProducts } from "../tenStack/fakeStoreApi";
 import { useState } from "react";
 import CategorySection from "../components/Cetagory";
 import ProductCard from "../components/ProductCard";
+import LoaderComp from "../components/main/Loader";
 
 const ProductsPage = () => {
   const [func, setFunc] = useState("All");
@@ -14,10 +15,7 @@ const ProductsPage = () => {
 
   if (isLoading) {
     return (
-      <section className="px-4 py-6">
-        <h2 className="text-xl font-bold mb-6">Products</h2>
-        <p>Loading...</p>
-      </section>
+      <LoaderComp />
     );
   }
 

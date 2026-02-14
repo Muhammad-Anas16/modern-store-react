@@ -3,6 +3,8 @@ import { FaArrowLeft, FaHeart, FaEllipsisH } from "react-icons/fa";
 import { getAllProducts } from "./../tenStack/fakeStoreApi";
 import { useNavigate } from "react-router";
 import { useState, useEffect } from "react";
+import Empty from "../components/main/Empty";
+import LoaderComp from './../components/main/Loader';
 
 const Favorites_Page = () => {
   const navigate = useNavigate();
@@ -35,10 +37,7 @@ const Favorites_Page = () => {
 
   if (isLoading) {
     return (
-      <section className="px-4 py-6">
-        <h2 className="text-xl font-bold mb-6">Favorites</h2>
-        <p>Loading...</p>
-      </section>
+      <LoaderComp />
     );
   }
 
@@ -100,9 +99,7 @@ const Favorites_Page = () => {
             ))}
           </div>
         ) : (
-          <div className="text-center mt-20">
-            <p className="text-gray-500 text-lg">No favorite products yet 💔</p>
-          </div>
+          <Empty message="No favorite products yet 💔" />
         )}
       </div>
     </div>

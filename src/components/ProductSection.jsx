@@ -1,6 +1,7 @@
 import ProductCard from "./ProductCard";
 import { useQuery } from "@tanstack/react-query";
 import { getAllProducts } from "../tenStack/fakeStoreApi";
+import LoaderComp from "./main/Loader";
 
 const AllProductSection = ({ func }) => {
   const { data: products = [], isLoading } = useQuery({
@@ -10,10 +11,7 @@ const AllProductSection = ({ func }) => {
 
   if (isLoading) {
     return (
-      <section className="px-4 py-6">
-        <h2 className="text-xl font-bold mb-6">Products</h2>
-        <p>Loading...</p>
-      </section>
+      <LoaderComp />
     );
   }
 

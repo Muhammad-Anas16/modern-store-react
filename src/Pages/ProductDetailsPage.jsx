@@ -5,6 +5,7 @@ import { IoStar } from "react-icons/io5";
 import { FaArrowLeft, FaHeart } from "react-icons/fa";
 import { useState } from "react";
 import OrderSuccessModal from "../components/checkout/OrderSuccessModal";
+import LoaderComp from "../components/main/Loader";
 
 const ProductDetailsPage = () => {
   const { id } = useParams();
@@ -28,17 +29,13 @@ const ProductDetailsPage = () => {
   /* ---------------- Loading & Error ---------------- */
   if (isLoading) {
     return (
-      <div className="p-6 text-center">
-        <p className="text-lg font-semibold">Loading...</p>
-      </div>
+      <LoaderComp />
     );
   }
 
   if (isError || !data) {
     return (
-      <div className="p-6 text-center text-red-500">
-        <p className="text-lg font-semibold">Product not found</p>
-      </div>
+      <Empty message="Product not found 😢" />
     );
   }
 

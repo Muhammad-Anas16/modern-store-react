@@ -3,6 +3,8 @@ import { FaArrowLeft, FaTrash, FaEllipsisH } from "react-icons/fa";
 import { getAllProducts } from "./../tenStack/fakeStoreApi";
 import { Link, useNavigate } from "react-router";
 import { IoMdArrowRoundForward } from "react-icons/io";
+import Empty from "../components/main/Empty";
+import LoaderComp from './../components/main/Loader';
 
 const Cart_Page = () => {
   const navigate = useNavigate();
@@ -19,10 +21,7 @@ const Cart_Page = () => {
 
   if (isLoading) {
     return (
-      <section className="px-4 py-6">
-        <h2 className="text-xl font-bold mb-6">Products</h2>
-        <p>Loading...</p>
-      </section>
+      <LoaderComp />
     );
   }
 
@@ -105,7 +104,7 @@ const Cart_Page = () => {
             </div>
           ))
         ) : (
-          <p className="text-center text-gray-500">Your cart is empty</p>
+          <Empty message="Your cart is empty" />
         )}
       </div>
     </div>
