@@ -4,6 +4,7 @@ import { FiMenu, FiX, FiSearch, FiShoppingBag } from "react-icons/fi";
 import { LuHeart } from "react-icons/lu";
 import { Link } from "react-router";
 import { getAllProducts } from "../../tenStack/fakeStoreApi";
+import SearchBar from "./SearchBar";
 
 const Navbar = () => {
   const { data, isLoading } = useQuery({
@@ -18,11 +19,10 @@ const Navbar = () => {
   const parseID = getId ? JSON.parse(getId) : []; // Parse cart data in JSON format
   const cartData = data?.filter((item) => parseID.includes(item.id)); // Filter for get only cart in localStorage
 
-// Get Favorites data from localStorage and filter it with the data from API to get only products in the favorites
+  // Get Favorites data from localStorage and filter it with the data from API to get only products in the favorites
   const getFav = localStorage.getItem("favorites"); // Get favorites data from localStorage
   const parseFav = getFav ? JSON.parse(getFav) : []; // Parse favorites data in JSON format
   const favData = data?.filter((item) => parseFav.includes(item.id)); // Filter for get only favorites in localStorage
-
 
   return (
     <>
@@ -73,23 +73,24 @@ const Navbar = () => {
       </nav>
 
       {searchOpen && (
-        <div className="fixed top-14 z-40 w-full border-b border-black/10 bg-white">
-          <div className="mx-auto flex max-w-screen items-center gap-3 px-4 py-3">
-            <input
-              type="text"
-              placeholder="Search products..."
-              autoFocus
-              className="w-full rounded-md border border-black/20 px-4 py-2 text-sm outline-none focus:border-[#135BEC]"
-            />
+        // <div className="fixed top-14 z-40 w-full border-b border-black/10 bg-white">
+        //   <div className="mx-auto flex max-w-screen items-center gap-3 px-4 py-3">
+        //     <input
+        //       type="text"
+        //       placeholder="Search products..."
+        //       autoFocus
+        //       className="w-full rounded-md border border-black/20 px-4 py-2 text-sm outline-none focus:border-[#135BEC]"
+        //     />
 
-            <button
-              onClick={() => setSearchOpen(false)}
-              className="flex h-9 w-9 items-center justify-center rounded-md hover:bg-black/5"
-            >
-              <FiX size={18} />
-            </button>
-          </div>
-        </div>
+        //     <button
+        //       onClick={() => setSearchOpen(false)}
+        //       className="flex h-9 w-9 items-center justify-center rounded-md hover:bg-black/5"
+        //     >
+        //       <FiX size={18} />
+        //     </button>
+        //   </div>
+        // </div>
+        <SearchBar setSearchOpen={setSearchOpen} />
       )}
     </>
   );
