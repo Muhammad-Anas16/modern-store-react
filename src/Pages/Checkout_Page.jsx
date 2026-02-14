@@ -20,7 +20,7 @@ const Checkout_Page = () => {
     enabled: !!id,
   });
 
-  console.log("Checkout product data:", data); // Debug log
+  // console.log("Checkout product data:", data); // Debug log
 
   // const { category, description, image, price, title, rating } = data;
   // const { count, rate } = rating;
